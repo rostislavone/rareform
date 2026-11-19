@@ -1,0 +1,10 @@
+# Одноразовая задача: сделать резервную копию. Запускает её таймер rareform-backup.timer.
+[Unit]
+Description=RAREFORM — резервная копия базы и фото
+
+[Service]
+Type=oneshot
+User=rareform
+Group=rareform
+EnvironmentFile=/etc/rareform.env
+ExecStart=/srv/rareform/.venv/bin/python /srv/rareform/deploy/backup.py

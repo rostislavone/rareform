@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Избранное | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♥<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section container favorites-page">
+    <div class="section-head">
+      <span class="label" id="fav-total"></span>
+      <h2>Избранное</h2>
+    </div>
+
+    <!-- Карточки добавляет JavaScript -->
+    <div class="grid" id="grid"></div>
+
+    <!-- Показывается, когда в избранном пусто -->
+    <div class="empty" id="empty" hidden>
+      <p>Здесь пока пусто. Нажми ♡ на вещи, чтобы сохранить её.</p>
+      <a href="index.html#catalog" class="btn btn-dark">Перейти в каталог</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom label">© 2026 RAREFORM</div>
+    </div>
+  </footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" позволяет написать await прямо в скрипте: ждём товары с сервера -->
+  <script type="module">
+    await productsReady;  // из products.js
+    await favoritesReady; // из ui.js — избранное аккаунта уже загружено
+
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+    const total = document.getElementById("fav-total");
+
+    // Рисуем все вещи из избранного
+    function renderFavorites() {
+      const favorites = getFavoriteProducts();
+      grid.innerHTML = favorites.map(cardHtml).join("");
+      empty.hidden = favorites.length > 0;
+      total.textContent = favorites.length > 0 ? `Сохранено: ${favorites.length}` : "";
+    }
+
+    // Если здесь снять сердечко, вещь сразу пропадает со страницы
+    setupLikes(grid, renderFavorites);
+    renderFavorites();
+  </script>
+
+</body>
+</html>

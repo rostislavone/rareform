@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Комиссия | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Баннер без фото: чёрный, текст по центру -->
+  <section class="hero page-hero page-hero-plain">
+    <div class="hero-text">
+      <span class="label hero-line" style="--delay: 0.1s">Продавцам</span>
+      <h1>
+        <span class="hero-line" style="--delay: 0.25s">Комиссия</span>
+        <em class="hero-line" style="--delay: 0.4s">только с продажи.</em>
+      </h1>
+      <p class="hero-line" style="--delay: 0.55s">Размещение бесплатное. Платишь, только когда вещь нашла покупателя и прошла проверку подлинности.</p>
+    </div>
+  </section>
+
+  <main class="info">
+
+    <!-- Тарифы -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Тарифы</span>
+        <h2>Чем дороже вещь, тем ниже процент</h2>
+      </div>
+      <div>
+        <table class="tiers">
+          <thead>
+            <tr><th>Цена продажи</th><th>Комиссия</th></tr>
+          </thead>
+          <!-- Числа в этой таблице и в калькуляторе ниже должны совпадать -->
+          <tbody>
+            <tr><td>до 30 000 ₽</td><td>15%</td></tr>
+            <tr><td>от 30 000 до 100 000 ₽</td><td>12%</td></tr>
+            <tr><td>от 100 000 ₽</td><td>10%</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 20px">Минимальная комиссия — 500 ₽. В неё уже входят проверка подлинности, фотосъёмка на складе и страховка при доставке.</p>
+      </div>
+    </section>
+
+    <!-- Калькулятор -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Калькулятор</span>
+        <h2>Сколько ты получишь</h2>
+      </div>
+      <div class="calc">
+        <label>Цена вещи, ₽
+          <input type="number" id="calc-price" min="0" step="100" value="45000">
+        </label>
+        <div class="calc-row"><span>Комиссия</span><strong id="calc-percent"></strong></div>
+        <div class="calc-row"><span>Удержим</span><strong id="calc-fee"></strong></div>
+        <div class="calc-row total"><span>Ты получишь</span><strong id="calc-payout"></strong></div>
+      </div>
+    </section>
+
+    <!-- Когда приходят деньги -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Выплаты</span>
+        <h2>Когда приходят деньги</h2>
+      </div>
+      <div>
+        <p>Деньги покупателя хранятся у нас, пока вещь едет. Как только покупатель получил заказ и подтвердил, что всё в порядке, мы переводим выплату на карту продавца — <strong>в течение 2 рабочих дней</strong>.</p>
+        <p>Если покупатель не подтвердил получение сам, выплата уходит автоматически через 3 дня после доставки.</p>
+      </div>
+    </section>
+
+    <!-- Вопросы -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Вопросы</span>
+        <h2>Частые вопросы</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Есть ли плата за размещение?</summary>
+          <p>Нет. Объявления бесплатные, сколько бы их ни было. Комиссию берём только с состоявшейся продажи.</p>
+        </details>
+        <details>
+          <summary>Что, если вещь не прошла проверку?</summary>
+          <p>Сделка отменяется, покупатель получает деньги обратно, а вещь возвращается продавцу. Комиссия не удерживается, но доставку в обе стороны оплачивает продавец.</p>
+        </details>
+        <details>
+          <summary>Можно ли снизить цену после публикации?</summary>
+          <p>Да, в любой момент. Тем, кто добавил вещь в избранное, придёт уведомление о новой цене.</p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    // ===== Калькулятор комиссии =====
+    const MIN_FEE = 500;
+
+    // Процент зависит от цены — те же числа, что в таблице выше
+    function commissionPercent(price) {
+      if (price < 30000) return 15;
+      if (price < 100000) return 12;
+      return 10;
+    }
+
+    const priceInput = document.getElementById("calc-price");
+
+    function updateCalc() {
+      const price = Math.max(0, Number(priceInput.value) || 0);
+      const percent = commissionPercent(price);
+      // Math.max выбирает большее: процент от цены или минимальные 500 ₽.
+      // Math.min — чтобы комиссия не оказалась больше самой цены
+      const fee = price > 0 ? Math.min(price, Math.max(MIN_FEE, Math.round(price * percent / 100))) : 0;
+
+      document.getElementById("calc-percent").textContent = `${percent}%`;
+      document.getElementById("calc-fee").textContent = formatPrice(fee);
+      document.getElementById("calc-payout").textContent = formatPrice(price - fee);
+    }
+
+    priceInput.addEventListener("input", updateCalc);
+    updateCalc();
+  </script>
+
+</body>
+</html>

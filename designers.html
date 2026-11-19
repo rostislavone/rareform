@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дизайнеры | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html" class="current">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section container designers-page">
+    <div class="section-head">
+      <span class="label">От А до Я</span>
+      <h2>Дизайнеры</h2>
+    </div>
+
+    <!-- Страны. Кнопки добавляет JavaScript по данным из products.js -->
+    <div class="categories" id="countries"></div>
+
+    <!-- Список дизайнеров, сгруппированный по первой букве -->
+    <div class="designers" id="designers"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom label">© 2026 RAREFORM</div>
+    </div>
+  </footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" позволяет написать await прямо в скрипте: ждём товары с сервера -->
+  <script type="module">
+    await productsReady; // из products.js
+
+    const countriesBox = document.getElementById("countries");
+    const list = document.getElementById("designers");
+
+    // ===== Собираем список дизайнеров =====
+    // Берём бренды из справочника designers и из товаров
+    // (там могут быть бренды из «Продать», которых нет в справочнике).
+    // Set — это набор без повторов: Gucci попадёт в него один раз.
+    const brandNames = new Set([...Object.keys(designers), ...products.map(p => p.brand)]);
+
+    const allDesigners = [...brandNames].map(name => ({
+      name: name,
+      country: designers[name]?.country || "", // ?. — если бренда нет в справочнике, не будет ошибки
+      about: designers[name]?.about || "",
+      count: products.filter(p => p.brand === name).length
+    }));
+
+    // Сортируем по алфавиту. localeCompare правильно сравнивает строки, в том числе с ç и кириллицей
+    allDesigners.sort((a, b) => a.name.localeCompare(b.name));
+
+    // ===== Фильтр по стране =====
+    // Страна может прийти из адреса: designers.html?country=Япония
+    let currentCountry = new URLSearchParams(window.location.search).get("country") || "Все";
+
+    // Список стран без повторов и пустых значений, по алфавиту
+    const countries = ["Все", ...[...new Set(allDesigners.map(d => d.country).filter(c => c))].sort()];
+
+    function renderCountries() {
+      countriesBox.innerHTML = countries
+        .map(c => `<a href="#" data-country="${c}" class="${c === currentCountry ? "active" : ""}">${c}</a>`)
+        .join("");
+    }
+
+    countriesBox.addEventListener("click", (event) => {
+      const link = event.target.closest("a");
+      if (!link) return;
+      event.preventDefault();
+      currentCountry = link.dataset.country;
+      // Запоминаем страну в адресе, чтобы ссылкой можно было поделиться
+      const url = currentCountry === "Все" ? "designers.html" : `designers.html?country=${encodeURIComponent(currentCountry)}`;
+      history.replaceState(null, "", url);
+      renderCountries();
+      renderDesigners();
+    });
+
+    // ===== Список =====
+    function renderDesigners() {
+      const shown = allDesigners.filter(d => currentCountry === "Все" || d.country === currentCountry);
+
+      // Группируем по первой букве: { "C": [...], "G": [...] }
+      const groups = {};
+      for (const d of shown) {
+        const letter = d.name[0].toUpperCase();
+        if (!groups[letter]) groups[letter] = [];
+        groups[letter].push(d);
+      }
+
+      list.innerHTML = "";
+      for (const letter in groups) {
+        let rows = "";
+        for (const d of groups[letter]) {
+          // encodeURIComponent превращает пробелы и ç в безопасный вид для адреса
+          const url = `index.html?brand=${encodeURIComponent(d.name)}#catalog`;
+          // Если вещей нет, строка не кликабельная и подписана «Скоро»
+          const tag = d.count > 0 ? "a" : "div";
+          rows += `
+            <${tag} class="designer ${d.count === 0 ? "designer-soon" : ""}" ${d.count > 0 ? `href="${escapeHtml(url)}"` : ""}>
+              <div>
+                <h3>${escapeHtml(d.name)}</h3>
+                <p>${escapeHtml(d.about)}</p>
+              </div>
+              <span class="label">${escapeHtml(d.country)}</span>
+              <span class="designer-count">${d.count > 0 ? itemsWord(d.count) : "Скоро"}</span>
+            </${tag}>
+          `;
+        }
+        list.innerHTML += `
+          <section class="letter-group reveal">
+            <div class="letter">${letter}</div>
+            <div>${rows}</div>
+          </section>
+        `;
+      }
+    }
+
+    renderCountries();
+    renderDesigners();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Проверка подлинности | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Баннер с фото, как на главной -->
+  <section class="hero page-hero hero-soft">
+    <img src="images/authenticity.jpg" alt="Интерьер бутика из чёрного мрамора с подсвеченными полками" class="hero-bg">
+    <div class="hero-text">
+      <span class="label hero-line" style="--delay: 0.1s">Гарантия</span>
+      <h1>
+        <span class="hero-line" style="--delay: 0.25s">Проверяем</span>
+        <em class="hero-line" style="--delay: 0.4s">каждый стежок.</em>
+      </h1>
+      <p class="hero-line" style="--delay: 0.55s">Ни одна вещь не уходит покупателю, пока её не осмотрел специалист по бренду.</p>
+    </div>
+  </section>
+
+  <main class="info">
+
+    <!-- Как проходит проверка: 4 шага -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Процесс</span>
+        <h2>Как это устроено</h2>
+      </div>
+      <p>После оплаты продавец отправляет вещь не покупателю, а к нам. Мы проверяем её и только потом передаём в доставку. Обычно на это уходит <strong>1–2 рабочих дня</strong>.</p>
+    </section>
+
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-num">01</span>
+        <h3>Приёмка</h3>
+        <p>Фотографируем вещь при получении и сверяем с объявлением: модель, размер, цвет, состояние.</p>
+      </div>
+      <div class="step reveal" style="--delay: 0.1s">
+        <span class="step-num">02</span>
+        <h3>Осмотр</h3>
+        <p>Специалист по бренду изучает бирки, шрифты, швы, фурнитуру и материалы под лупой и в ультрафиолете.</p>
+      </div>
+      <div class="step reveal" style="--delay: 0.2s">
+        <span class="step-num">03</span>
+        <h3>Сверка</h3>
+        <p>Сравниваем с архивом подтверждённых экземпляров того же сезона: номера, коды, расположение деталей.</p>
+      </div>
+      <div class="step reveal" style="--delay: 0.3s">
+        <span class="step-num">04</span>
+        <h3>Пломба</h3>
+        <p>Крепим пломбу RAREFORM с номером и кладём сертификат проверки. Вещь уходит покупателю.</p>
+      </div>
+    </div>
+
+    <!-- Что смотрим -->
+    <section class="info-row reveal" style="margin-top: 64px">
+      <div>
+        <span class="label">Детали</span>
+        <h2>На что мы смотрим</h2>
+      </div>
+      <ul>
+        <li><strong>Бирки и ярлыки</strong> — шрифт, плотность ткани, коды и страна производства.</li>
+        <li><strong>Швы</strong> — шаг строчки, нитки, обработка краёв изнутри.</li>
+        <li><strong>Фурнитура</strong> — молнии, кнопки, пряжки, гравировка и вес металла.</li>
+        <li><strong>Материалы</strong> — кожа, шерсть, деним: фактура, запах, поведение на сгибе.</li>
+        <li><strong>Упаковка</strong> — пыльники, коробки, карточки, если они есть в комплекте.</li>
+      </ul>
+    </section>
+
+    <!-- Цифры -->
+    <section class="info-row reveal">
+      <div class="stats" style="grid-column: 1 / -1">
+        <div class="stat"><strong>48 ч</strong><span>Средний срок проверки</span></div>
+        <div class="stat"><strong>120+</strong><span>Брендов в архиве сверки</span></div>
+        <div class="stat"><strong>100%</strong><span>Возврат, если вещь не оригинал</span></div>
+      </div>
+    </section>
+
+    <!-- Гарантия -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Если что-то не так</span>
+        <h2>Гарантия возврата</h2>
+      </div>
+      <div>
+        <p>Если вещь не прошла проверку, сделка отменяется и <strong>покупатель получает деньги полностью</strong> — ему ничего не нужно делать.</p>
+        <p>Если сомнения появились уже после получения, напиши нам в течение 14 дней. Мы повторно проверим вещь и вернём деньги, если подтвердится подделка.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+
+</body>
+</html>

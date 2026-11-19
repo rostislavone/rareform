@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель администратора | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- hidden: покажем, только когда убедимся, что зашёл администратор -->
+  <main class="section container admin-page" id="admin" hidden>
+    <div class="section-head reveal">
+      <span class="label">Администратор</span>
+      <h2>Панель управления</h2>
+    </div>
+
+    <!-- Сводка: цифры заполняет скрипт -->
+    <div class="stats admin-stats reveal" id="stats"></div>
+
+    <!-- Вкладки: та же разметка, что «Вход / Регистрация» -->
+    <div class="auth-tabs admin-tabs">
+      <button type="button" class="active" data-tab="users">Пользователи</button>
+      <button type="button" data-tab="orders">Заказы</button>
+      <button type="button" data-tab="products">Объявления</button>
+    </div>
+
+    <!-- Пользователи. Обёртка с прокруткой — на телефоне широкая таблица листается вбок -->
+    <section data-panel="users">
+      <div class="table-scroll">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Имя</th><th>Почта</th><th>С нами с</th><th>Выставил</th><th>Купил</th><th></th></tr>
+          </thead>
+          <tbody id="users"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section data-panel="orders" hidden>
+      <div class="table-scroll">
+        <table class="admin-table">
+          <thead>
+            <tr><th>№</th><th>Вещь</th><th>Продавец</th><th>Покупатель</th><th>Доставка</th><th>Сумма</th><th>Когда</th></tr>
+          </thead>
+          <tbody id="orders"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="orders-empty" hidden>Заказов пока нет</p>
+    </section>
+
+    <section data-panel="products" hidden>
+      <div class="grid" id="products-grid"></div>
+    </section>
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" — чтобы можно было написать await прямо в скрипте -->
+  <script type="module">
+    const user = await userReady; // из ui.js
+
+    // Страницу видит только администратор. Это удобство, а не защита:
+    // настоящая защита — на сервере, он не отдаст данные /api/admin/... никому другому
+    if (!user) {
+      location.replace(loginUrl());
+    } else if (!user.is_admin) {
+      location.replace("account.html");
+    } else {
+      document.getElementById("admin").hidden = false;
+      await Promise.all([loadStats(), loadUsers(), loadOrders(), loadProducts()]);
+    }
+
+    // ===== Вкладки =====
+    const tabs = document.querySelectorAll("[data-tab]");
+    for (const tab of tabs) {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.toggle("active", t === tab));
+        document.querySelectorAll("[data-panel]").forEach(panel => panel.hidden = panel.dataset.panel !== tab.dataset.tab);
+      });
+    }
+
+    // ===== Сводка =====
+    async function loadStats() {
+      const s = await fetch("/api/admin/stats").then(r => r.json());
+      const items = [
+        [s.users, "Пользователей"], [s.products, "Объявлений"], [s.orders, "Заказов"],
+        [formatPrice(s.revenue), "Сумма заказов"], [s.offers, "Предложений цены"], [s.messages, "Сообщений"]
+      ];
+      document.getElementById("stats").innerHTML = items
+        .map(([value, label]) => `<div class="stat"><strong>${value}</strong><span>${label}</span></div>`)
+        .join("");
+    }
+
+    // ===== Пользователи =====
+    async function loadUsers() {
+      const users = await fetch("/api/admin/users").then(r => r.json());
+      // Все данные пользователей — через escapeHtml: имя мог ввести кто угодно
+      document.getElementById("users").innerHTML = users.map(u => `
+        <tr class="${u.is_blocked ? "blocked" : ""}">
+          <td>${escapeHtml(u.name)}${u.is_admin ? ' <span class="badge">админ</span>' : ""}${u.is_blocked ? ' <span class="badge badge-red">заблокирован</span>' : ""}</td>
+          <td>${escapeHtml(u.email)}</td>
+          <td>${formatDate(u.created_at)}</td>
+          <td>${u.listings}</td>
+          <td>${u.purchases}</td>
+          <td>${u.is_admin ? "" : `<button class="btn btn-light btn-small" data-block="${Number(u.id)}" data-blocked="${u.is_blocked ? 1 : 0}">
+            ${u.is_blocked ? "Разблокировать" : "Заблокировать"}</button>`}</td>
+        </tr>
+      `).join("");
+
+      for (const button of document.querySelectorAll("[data-block]")) {
+        button.onclick = async () => {
+          const block = button.dataset.blocked === "0";
+          if (block && !confirm("Заблокировать? Человека выкинет из аккаунта, войти снова он не сможет.")) return;
+          button.disabled = true;
+          const response = await fetch(`/api/admin/users/${button.dataset.block}/blocked`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ blocked: block })
+          }).catch(() => null);
+          if (response?.ok) {
+            await loadUsers(); // перерисовываем таблицу с новым статусом
+          } else {
+            alert("Не получилось. Попробуй ещё раз.");
+            button.disabled = false;
+          }
+        };
+      }
+    }
+
+    // ===== Заказы =====
+    async function loadOrders() {
+      const orders = await fetch("/api/admin/orders").then(r => r.json());
+      document.getElementById("orders-empty").hidden = orders.length > 0;
+      document.getElementById("orders").innerHTML = orders.map(o => `
+        <tr>
+          <td>${Number(o.id)}</td>
+          <td><a href="product.html?id=${Number(o.product_id)}">${escapeHtml(o.brand)} — ${escapeHtml(o.title)}</a></td>
+          <td>${escapeHtml(o.seller)}</td>
+          <td>${escapeHtml(o.buyer_name || "Удалённый аккаунт")}<br><small>${escapeHtml(o.name)}, ${escapeHtml(o.phone)}</small></td>
+          <td>${escapeHtml(o.delivery)}</td>
+          <td>${formatPrice(o.total)}</td>
+          <td>${formatDate(o.created_at)}</td>
+        </tr>
+      `).join("");
+    }
+
+    // ===== Объявления: все, со входящими и удалением (renderManagedListings из ui.js) =====
+    async function loadProducts() {
+      await productsReady; // из products.js
+      renderManagedListings(document.getElementById("products-grid"), products);
+    }
+  </script>
+
+</body>
+</html>

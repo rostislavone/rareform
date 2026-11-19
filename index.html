@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <!-- Чтобы сайт нормально выглядел на телефоне -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAREFORM — редкая одежда</title>
+  <!-- Шрифты из Google Fonts (оба поддерживают кириллицу) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Подключаем файл со стилями -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== Заставка при первом входе =====
+       Скрипт сразу под ней: если заставку в этой вкладке ещё не показывали,
+       ставим класс has-intro — без него CSS прячет заставку.
+       Скрипт срабатывает до того, как страница нарисуется, поэтому ничего не мигает -->
+  <div class="intro" aria-hidden="true">
+    <span class="intro-logo">RAREFORM</span>
+  </div>
+  <script>
+    try {
+      if (!sessionStorage.getItem("intro-seen")) {
+        document.documentElement.classList.add("has-intro");
+        sessionStorage.setItem("intro-seen", "1");
+      }
+    } catch {
+      // хранилище недоступно — просто без заставки
+    }
+  </script>
+
+  <!-- ===== Верхняя полоска ===== -->
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- ===== Шапка: меню слева, логотип по центру, действия справа ===== -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Главный баннер ===== -->
+  <!-- Фото на весь баннер, слева поверх него текст. Чтобы поменять фото — поменяй src -->
+  <section class="hero">
+    <img src="images/hero-books.avif" alt="Книги о модных домах на полке" class="hero-bg">
+    <div class="hero-text">
+      <!-- Каждая строка выезжает снизу по очереди: задержку задаёт --delay -->
+      <span class="label hero-line" style="--delay: 0.1s">Архив · Дизайнерская одежда</span>
+      <h1>
+        <span class="hero-line" style="--delay: 0.25s">Редкие вещи.</span>
+        <em class="hero-line" style="--delay: 0.4s">Новая история.</em>
+      </h1>
+      <p class="hero-line" style="--delay: 0.55s">Маркетплейс архивной и дизайнерской одежды. Покупай то, чего больше нет в магазинах, и продавай то, что ждёт нового владельца.</p>
+      <div class="hero-buttons hero-line" style="--delay: 0.7s">
+        <a href="#catalog" class="btn btn-white">Смотреть каталог</a>
+        <a href="sell.html" class="btn btn-white-outline">Продать вещь</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Подборки ===== -->
+  <section class="section container">
+    <div class="section-head reveal">
+      <span class="label">Подборки</span>
+      <h2>Выбор редакции</h2>
+    </div>
+    <div class="collections">
+      <!-- Фото лежит под текстом, сверху тёмный градиент, чтобы текст читался -->
+      <a href="index.html?brand=Rick%20Owens#catalog" class="collection reveal">
+        <img src="images/rick.jpg" alt="">
+        <span class="label">Архив</span>
+        <h3>Rick Owens</h3>
+        <span class="more">Смотреть</span>
+      </a>
+      <a href="designers.html?country=Япония" class="collection reveal" style="--delay: 0.1s">
+        <img src="images/yohji.webp" alt="">
+        <span class="label">Токио</span>
+        <h3>Японские дизайнеры</h3>
+        <span class="more">Смотреть</span>
+      </a>
+      <a href="index.html?category=Обувь#catalog" class="collection reveal" style="--delay: 0.2s">
+        <img src="images/handmade.jpg" alt="">
+        <span class="label">Handmade</span>
+        <h3>Ручная работа</h3>
+        <span class="more">Смотреть</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== Бегущая строка с дизайнерами =====
+       Имена добавляет JavaScript из справочника designers в products.js -->
+  <section class="marquee-band">
+    <div class="marquee-head container">
+      <span class="label">Архив · Авангард · Ручная работа</span>
+      <a href="designers.html" class="more">Все дизайнеры</a>
+    </div>
+    <div class="marquee">
+      <div class="marquee-track" id="marquee-track"></div>
+    </div>
+  </section>
+
+  <!-- ===== Каталог ===== -->
+  <main class="section container" id="catalog">
+    <div class="section-head reveal">
+      <span class="label">Каталог</span>
+      <h2>Новые поступления</h2>
+    </div>
+
+    <!-- Категории -->
+    <div class="categories">
+      <!-- data-category должен совпадать с полем category в products.js -->
+      <a href="#" class="active" data-category="Все">Все</a>
+      <a href="#" data-category="Верх">Верх</a>
+      <a href="#" data-category="Низ">Низ</a>
+      <a href="#" data-category="Верхняя одежда">Верхняя одежда</a>
+      <a href="#" data-category="Обувь">Обувь</a>
+      <a href="#" data-category="Аксессуары">Аксессуары</a>
+    </div>
+
+    <!-- Выбранный дизайнер. Показывается, если в адресе есть ?brand=... -->
+    <div class="brand-filter" id="brand-filter" hidden>
+      <span class="label">Дизайнер</span>
+      <strong id="brand-name"></strong>
+      <button type="button" id="brand-reset" title="Показать всех">×</button>
+    </div>
+
+    <!-- Сколько нашлось и сортировка -->
+    <div class="catalog-toolbar">
+      <span class="label" id="found-count"></span>
+      <label class="sort label">Сортировка
+        <select id="sort">
+          <option value="new">Сначала новые</option>
+          <option value="cheap">Сначала дешевле</option>
+          <option value="expensive">Сначала дороже</option>
+          <option value="brand">По бренду, A–Z</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Сетка товаров. Она пустая: карточки добавляет JavaScript внизу страницы -->
+    <div class="grid" id="grid"></div>
+
+    <!-- Показывается, когда ничего не нашлось -->
+    <p class="empty" id="empty" hidden>Ничего не найдено. Попробуй другой запрос или категорию.</p>
+
+    <!-- Видна, только если вещей больше, чем уже показано -->
+    <div class="center" id="more-wrap" hidden>
+      <button type="button" class="btn btn-light" id="more-button">Показать ещё</button>
+    </div>
+  </main>
+
+  <!-- ===== Блок «Продай свою вещь» ===== -->
+  <!-- Слева фото улицы, справа текст -->
+  <section class="sell" id="sell">
+    <div class="sell-photo reveal">
+      <img src="images/street-gucci.avif" alt="Витрины модного дома и прохожие на улице">
+    </div>
+    <div class="sell-text reveal" style="--delay: 0.15s">
+      <span class="label">Для продавцов</span>
+      <h2>Дай вещи вторую жизнь</h2>
+      <p>Размести объявление за пару минут. Мы проверим подлинность и поможем найти покупателя.</p>
+      <a href="sell.html" class="btn btn-white">Начать продавать</a>
+    </div>
+  </section>
+
+  <!-- ===== Подвал. Содержимое одинаковое на всех страницах — его заполняет ui.js ===== -->
+  <footer class="footer"></footer>
+
+  <!-- Сначала подключаем список товаров, потом используем его -->
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" позволяет написать await прямо в скрипте: ждём товары с сервера -->
+  <script type="module">
+    await productsReady; // из products.js
+
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+    // Полей поиска два: в шапке и в меню для телефона (его добавляет ui.js)
+    const searchInputs = document.querySelectorAll(".search");
+    const categoryLinks = document.querySelectorAll(".categories a");
+
+    // Что сейчас выбрал пользователь
+    let currentCategory = "Все";
+    let currentBrand = ""; // пустая строка — все бренды
+    let searchText = "";
+
+    // ===== Фильтр из адреса страницы =====
+    // Другие страницы могут открыть каталог уже с фильтром:
+    // index.html?brand=Gucci#catalog или index.html?category=Обувь#catalog
+    const params = new URLSearchParams(window.location.search);
+    const brandFilter = document.getElementById("brand-filter");
+
+    if (params.get("category")) {
+      currentCategory = params.get("category");
+      categoryLinks.forEach(l => l.classList.toggle("active", l.dataset.category === currentCategory));
+    }
+
+    function showBrand(brand) {
+      currentBrand = brand;
+      brandFilter.hidden = brand === "";
+      document.getElementById("brand-name").textContent = brand;
+    }
+    showBrand(params.get("brand") || "");
+
+    // Поиск с другой страницы приходит как index.html?q=gucci
+    if (params.get("q")) {
+      searchText = params.get("q").trim().toLowerCase();
+      searchInputs.forEach(input => input.value = params.get("q"));
+    }
+
+    // Крестик: убираем дизайнера из фильтра и из адреса
+    document.getElementById("brand-reset").addEventListener("click", () => {
+      showBrand("");
+      // history.replaceState меняет адрес без перезагрузки страницы
+      history.replaceState(null, "", "index.html#catalog");
+      renderGrid();
+    });
+
+    // Подходит ли товар под выбранную категорию, дизайнера и текст поиска
+    function matches(product) {
+      const categoryOk = currentCategory === "Все" || product.category === currentCategory;
+      const brandOk = currentBrand === "" || product.brand === currentBrand;
+      // Ищем без учёта регистра по бренду, названию и категории
+      const text = (product.brand + " " + product.title + " " + product.category).toLowerCase();
+      const searchOk = text.includes(searchText);
+      return categoryOk && brandOk && searchOk;
+    }
+
+    // ===== Сортировка =====
+    const sortSelect = document.getElementById("sort");
+
+    // Функции сравнения для sort: возвращают минус, если a должен идти раньше b,
+    // плюс — если позже. Для чисел достаточно вычесть одно из другого.
+    const sorters = {
+      new: (a, b) => b.id - a.id,            // у новых товаров id больше
+      cheap: (a, b) => a.price - b.price,
+      expensive: (a, b) => b.price - a.price,
+      brand: (a, b) => a.brand.localeCompare(b.brand) // строки сравниваем через localeCompare
+    };
+
+    sortSelect.addEventListener("change", renderGrid);
+
+    // ===== Порции по 8 вещей =====
+    // Сначала показываем 8, кнопка «Показать ещё» добавляет следующие 8
+    const PAGE_SIZE = 8;
+    let found = [];  // все вещи, подходящие под фильтры
+    let shown = 0;   // сколько из них уже на экране
+    const moreWrap = document.getElementById("more-wrap");
+    const moreButton = document.getElementById("more-button");
+
+    // Добавляет в сетку следующую порцию, не трогая уже показанные карточки
+    function showNextPage() {
+      const next = found.slice(shown, shown + PAGE_SIZE);
+      // insertAdjacentHTML("beforeend") дописывает HTML в конец, старые карточки не перерисовываются
+      grid.insertAdjacentHTML("beforeend", next.map(cardHtml).join(""));
+      shown += next.length;
+      const left = found.length - shown;
+      moreWrap.hidden = left <= 0;
+      moreButton.textContent = `Показать ещё · ${Math.min(left, PAGE_SIZE)}`;
+    }
+
+    moreButton.addEventListener("click", showNextPage);
+
+    // Перерисовывает сетку заново (при смене фильтра, поиска, сортировки)
+    function renderGrid() {
+      // filter возвращает новый массив, поэтому sort не перемешает сам products
+      found = products.filter(matches).sort(sorters[sortSelect.value]);
+      empty.hidden = found.length > 0;
+      // itemsWord из ui.js: «1 вещь», «3 вещи», «8 вещей»
+      document.getElementById("found-count").textContent = found.length > 0 ? itemsWord(found.length) : "";
+      grid.innerHTML = "";
+      shown = 0;
+      showNextPage();
+    }
+
+    // Клик по категории: подсвечиваем её и перерисовываем сетку
+    for (const link of categoryLinks) {
+      link.addEventListener("click", (event) => {
+        event.preventDefault(); // чтобы ссылка href="#" не прыгала наверх страницы
+        categoryLinks.forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
+        currentCategory = link.dataset.category;
+        renderGrid();
+      });
+    }
+
+    for (const searchInput of searchInputs) {
+      // Ввод в поиске: событие input срабатывает на каждую букву
+      searchInput.addEventListener("input", () => {
+        searchText = searchInput.value.trim().toLowerCase();
+        // Второе поле показывает тот же текст
+        searchInputs.forEach(other => other.value = searchInput.value);
+        renderGrid();
+      });
+
+      // Enter в поиске — прокручиваем к каталогу, чтобы увидеть результат
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          document.querySelector(".header").classList.remove("menu-open"); // закрываем меню на телефоне
+          smoothScrollTo(document.getElementById("catalog")); // из ui.js
+        }
+      });
+    }
+
+    // ===== Бегущая строка =====
+    // Список имён повторяем дважды: когда первая половина уезжает влево,
+    // на её месте ровно такая же вторая — и анимация начинается заново незаметно.
+    const marqueeNames = Object.keys(designers)
+      .map(name => `<a href="index.html?brand=${encodeURIComponent(name)}#catalog">${name}</a><span>✦</span>`)
+      .join("");
+    document.getElementById("marquee-track").innerHTML = marqueeNames + marqueeNames;
+
+    // Карточку товара рисует функция cardHtml из ui.js
+    setupLikes(grid); // включаем сердечки на карточках
+    renderGrid(); // первый показ — все товары
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+[
+  {
+    "id": 8,
+    "brand": "Gucci",
+    "title": "Оправа GG1085O 001",
+    "price": 32000,
+    "size": "OS",
+    "emoji": "👓",
+    "category": "Аксессуары",
+    "condition": "Новое",
+    "color": "Чёрный",
+    "city": "Москва",
+    "seller": "luxe_corner",
+    "rating": 5.0,
+    "sales": 37,
+    "photos": [
+      "gucci-glasses-1.webp",
+      "gucci-glasses-2.webp"
+    ],
+    "description": "Оптическая оправа Gucci GG1085O, цвет 001 (чёрный). Можно вставить линзы под своё зрение. Новая, в фирменном футляре."
+  },
+  {
+    "id": 7,
+    "brand": "Comme des Garçons",
+    "title": "Свитер Homme Plus",
+    "price": 27000,
+    "size": "M",
+    "emoji": "🧶",
+    "category": "Верх",
+    "condition": "Отличное",
+    "color": "Коричневый, узор пейсли",
+    "city": "Екатеринбург",
+    "seller": "tokyo_archive",
+    "rating": 4.8,
+    "sales": 89,
+    "photos": [
+      "cdg-1.webp",
+      "cdg-2.webp",
+      "cdg-3.webp",
+      "cdg-4.webp"
+    ],
+    "description": "Шерстяной свитер Comme des Garçons Homme Plus с асимметричным кроем. Без катышков и затяжек."
+  },
+  {
+    "id": 6,
+    "brand": "Guidi",
+    "title": "Ботинки 788Z",
+    "price": 72000,
+    "size": "42",
+    "emoji": "🥾",
+    "category": "Обувь",
+    "condition": "Хорошее",
+    "color": "Чёрный",
+    "city": "Москва",
+    "seller": "white_label",
+    "rating": 4.7,
+    "sales": 54,
+    "photos": [
+      "guidi-1.webp",
+      "guidi-2.webp"
+    ],
+    "description": "Ботинки Guidi 788Z из лошадиной кожи ручной работы. Кожа красиво разносилась, подошва в хорошем состоянии."
+  },
+  {
+    "id": 5,
+    "brand": "Supreme",
+    "title": "Кепка New Era Scream Box Logo",
+    "price": 9900,
+    "size": "7 3/8",
+    "emoji": "🧢",
+    "category": "Аксессуары",
+    "condition": "Отличное",
+    "color": "Лесной камуфляж",
+    "city": "Казань",
+    "seller": "drop_hunter",
+    "rating": 4.6,
+    "sales": 211,
+    "photos": [
+      "supreme-1.webp",
+      "supreme-2.webp",
+      "supreme-3.webp"
+    ],
+    "description": "Кепка Supreme × Scream на базе New Era 59FIFTY в лесном камуфляже. Спереди вышитый Box Logo, сзади маска из «Крика» и надпись World Famous. Закрытая спинка, размер 7 3/8 (58,7 см). Почти не носилась."
+  },
+  {
+    "id": 4,
+    "brand": "Gucci",
+    "title": "Джинсы Horsebit SS26",
+    "price": 95000,
+    "size": "32",
+    "emoji": "👖",
+    "category": "Низ",
+    "condition": "Новое с бирками",
+    "color": "Белый деним",
+    "city": "Москва",
+    "seller": "luxe_corner",
+    "rating": 5.0,
+    "sales": 37,
+    "photos": [
+      "gucci-jeans-1.webp",
+      "gucci-jeans-2.webp",
+      "gucci-jeans-3.webp",
+      "gucci-jeans-4.webp",
+      "gucci-jeans-5.webp"
+    ],
+    "description": "Джинсы Gucci из коллекции весна-лето 2026 с фирменной металлической деталью Horsebit. Новые, с бирками и оригинальным пакетом."
+  },
+  {
+    "id": 3,
+    "brand": "Raf Simons",
+    "title": "Футболка оверсайз 2002",
+    "price": 31000,
+    "size": "L",
+    "emoji": "👕",
+    "category": "Верх",
+    "condition": "Отличное",
+    "color": "Тёмно-серый, красный принт",
+    "city": "Москва",
+    "seller": "archive_dealer",
+    "rating": 4.9,
+    "sales": 128,
+    "photos": [
+      "raf-simons-1.webp",
+      "raf-simons-2.webp",
+      "raf-simons-3.webp",
+      "raf-simons-4.webp",
+      "raf-simons-5.webp"
+    ],
+    "description": "Архивная футболка Raf Simons 2002 года свободного кроя. Принт целый, без трещин. Редкая вещь из коллекции начала двухтысячных."
+  },
+  {
+    "id": 2,
+    "brand": "Maison Margiela",
+    "title": "Кеды Replica",
+    "price": 24500,
+    "size": "43",
+    "emoji": "👟",
+    "category": "Обувь",
+    "condition": "Хорошее",
+    "color": "Белый / серый",
+    "city": "Санкт-Петербург",
+    "seller": "white_label",
+    "rating": 4.7,
+    "sales": 54,
+    "photos": [
+      "margiela-1.webp",
+      "margiela-2.webp",
+      "margiela-3.webp"
+    ],
+    "description": "Классические кеды Replica из гладкой кожи. Подошва с небольшими следами носки, верх в отличном состоянии. Есть коробка и пыльник."
+  },
+  {
+    "id": 1,
+    "brand": "Rick Owens",
+    "title": "Кожаная куртка Stooges",
+    "price": 92999,
+    "size": "M, L",
+    "emoji": "🧥",
+    "category": "Верхняя одежда",
+    "condition": "Отличное",
+    "color": "Чёрный",
+    "city": "Москва",
+    "seller": "archive_dealer",
+    "rating": 4.9,
+    "sales": 128,
+    "photos": [
+      "rick-owens-1.webp",
+      "rick-owens-2.webp",
+      "rick-owens-3.webp",
+      "rick-owens-4.webp"
+    ],
+    "description": "Оригинальная куртка Rick Owens Stooges из мягкой телячьей кожи. Носилась аккуратно, без повреждений. Отправлю СДЭКом по всей России."
+  }
+]

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Доставка и оплата | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero page-hero page-hero-plain">
+    <div class="hero-text">
+      <span class="label hero-line" style="--delay: 0.1s">Покупателям</span>
+      <h1>
+        <span class="hero-line" style="--delay: 0.25s">Доставка</span>
+        <em class="hero-line" style="--delay: 0.4s">и оплата.</em>
+      </h1>
+      <p class="hero-line" style="--delay: 0.55s">Вещь едет к тебе только после проверки подлинности. Деньги продавец получает только после того, как ты её получил.</p>
+    </div>
+  </section>
+
+  <main class="info">
+
+    <!-- Способы доставки — те же цены, что в окне «Купить» на странице товара -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Доставка</span>
+        <h2>Способы и сроки</h2>
+      </div>
+      <table class="tiers">
+        <thead>
+          <tr><th>Способ</th><th>Стоимость</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>СДЭК до пункта выдачи<br><small>2–5 дней после проверки</small></td><td>500 ₽</td></tr>
+          <tr><td>Курьер до двери<br><small>1–3 дня после проверки</small></td><td>900 ₽</td></tr>
+          <tr><td>Самовывоз в городе продавца<br><small>договариваетесь с продавцом</small></td><td>0 ₽</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Путь заказа -->
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Путь заказа</span>
+        <h2>От оплаты до двери</h2>
+      </div>
+      <p>Оформление занимает минуту, а дальше всё происходит без тебя: продавец отправляет вещь к нам, мы проверяем её и передаём в доставку. Номер для отслеживания придёт в сообщении.</p>
+    </section>
+
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-num">01</span>
+        <h3>Заказ</h3>
+        <p>Нажимаешь «Купить», выбираешь доставку и подтверждаешь заказ.</p>
+      </div>
+      <div class="step reveal" style="--delay: 0.1s">
+        <span class="step-num">02</span>
+        <h3>Отправка</h3>
+        <p>Продавец в течение 2 дней отправляет вещь на проверку.</p>
+      </div>
+      <div class="step reveal" style="--delay: 0.2s">
+        <span class="step-num">03</span>
+        <h3>Проверка</h3>
+        <p>Специалисты подтверждают подлинность и состояние — 1–2 дня.</p>
+      </div>
+      <div class="step reveal" style="--delay: 0.3s">
+        <span class="step-num">04</span>
+        <h3>Получение</h3>
+        <p>Вещь с пломбой и сертификатом едет к тебе выбранным способом.</p>
+      </div>
+    </div>
+
+    <section class="info-row reveal" style="margin-top: 64px">
+      <div>
+        <span class="label">Вопросы</span>
+        <h2>Оплата и возврат</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Когда списываются деньги?</summary>
+          <p>При оформлении заказа деньги замораживаются на карте. Списываются они только после того, как вещь прошла проверку подлинности.</p>
+        </details>
+        <details>
+          <summary>Можно ли вернуть вещь?</summary>
+          <p>Если вещь не совпадает с описанием или оказалась не оригиналом — да, в течение 14 дней, деньги вернутся полностью. Если просто не подошёл размер, можно договориться с продавцом или выставить вещь на продажу у нас.</p>
+        </details>
+        <details>
+          <summary>Доставляете ли вы за границу?</summary>
+          <p>Пока только по России. Международную доставку планируем добавить позже.</p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+
+</body>
+</html>

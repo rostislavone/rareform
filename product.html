@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Это шаблон: элементы с id пустые, JavaScript внизу заполнит их данными товара -->
+  <main class="container">
+
+    <!-- «Хлебные крошки»: показывают, где мы находимся -->
+    <div class="breadcrumbs label">
+      <a href="index.html">Главная</a> / <a href="index.html#catalog" id="crumb-category"></a> / <span id="crumb-brand"></span>
+    </div>
+
+    <div class="product">
+
+      <!-- ===== Левая колонка: фото ===== -->
+      <div class="reveal">
+        <!-- Главное фото лежит поверх эмодзи -->
+        <div class="product-img">
+          <span id="emoji"></span>
+          <img id="main-photo" alt="">
+        </div>
+        <!-- Миниатюры: клик по ним меняет главное фото -->
+        <div class="product-thumbs" id="thumbs"></div>
+      </div>
+
+      <!-- ===== Правая колонка: информация ===== -->
+      <div class="product-info reveal" style="--delay: 0.15s">
+        <span class="label" id="category"></span>
+        <h1 id="brand"></h1>
+        <p class="subtitle" id="title"></p>
+        <p class="price" id="price"></p>
+
+        <!-- Характеристики товара -->
+        <div class="details">
+          <div><span>Размер</span><span id="size"></span></div>
+          <div><span>Состояние</span><span id="condition"></span></div>
+          <div><span>Цвет</span><span id="color"></span></div>
+          <div><span>Город</span><span id="city"></span></div>
+        </div>
+
+        <div class="buttons">
+          <!-- data-open — id окна, которое откроет кнопка -->
+          <button class="btn btn-dark" data-open="buy-dialog">Купить</button>
+          <button class="btn btn-light" data-open="offer-dialog">Предложить цену</button>
+          <button class="btn btn-light" data-open="message-dialog">Написать продавцу</button>
+          <button class="btn btn-light" id="fav-button"></button>
+        </div>
+
+        <!-- Карточка продавца -->
+        <div class="seller">
+          <div class="avatar" id="avatar"></div>
+          <div>
+            <strong id="seller"></strong><br>
+            <small id="seller-stats"></small>
+          </div>
+        </div>
+
+        <p class="description" id="description"></p>
+      </div>
+
+    </div>
+
+    <!-- ===== Похожие вещи. Карточки добавляет JavaScript ===== -->
+    <section class="section similar" id="similar" hidden>
+      <div class="section-head">
+        <span class="label">Тебе может понравиться</span>
+        <h2>Похожие вещи</h2>
+      </div>
+      <div class="grid" id="similar-grid"></div>
+    </section>
+  </main>
+
+  <!-- ===== Окна (dialog) =====
+       <dialog> — встроенное окно браузера: showModal() открывает его поверх
+       страницы и затемняет фон, Esc закрывает. У каждого окна два состояния:
+       форма и сообщение «Готово», между ними переключаемся атрибутом hidden. -->
+
+  <!-- Купить -->
+  <dialog class="dialog" data-lenis-prevent id="buy-dialog">
+    <button type="button" class="dialog-close" title="Закрыть">×</button>
+    <form class="dialog-form">
+      <span class="label">Оформление заказа</span>
+      <h3>Купить</h3>
+      <div class="dialog-item"></div><!-- мини-карточка товара -->
+
+      <label>Имя
+        <input name="name" type="text" autocomplete="name" required>
+      </label>
+      <label>Телефон
+        <!-- pattern — правило для браузера: только цифры, пробелы, скобки, + и -, от 10 символов.
+             Скобки и минус экранированы \ — без этого современные браузеры считают правило ошибкой -->
+
+        <input name="phone" type="tel" placeholder="+7 900 000-00-00" autocomplete="tel"
+               pattern="[0-9 +\(\)\-]{10,20}" title="Например: +7 900 000-00-00" required>
+      </label>
+      <label>Доставка
+        <select name="delivery">
+          <!-- value — только способ доставки. Цену доставки сервер знает сам -->
+          <option value="cdek">СДЭК до пункта выдачи — 500 ₽</option>
+          <option value="courier">Курьер до двери — 900 ₽</option>
+          <option value="pickup" id="pickup-option">Самовывоз — бесплатно</option>
+        </select>
+      </label>
+
+      <div class="dialog-total">
+        <span>Итого</span>
+        <strong id="buy-total"></strong>
+      </div>
+      <p class="form-error dialog-error" hidden></p>
+      <button type="submit" class="btn btn-dark">Подтвердить заказ</button>
+      <small class="dialog-note">Оплата после проверки подлинности. Это учебный сайт: деньги не списываются.</small>
+    </form>
+    <div class="dialog-done" hidden>
+      <span class="label">Готово</span>
+      <h3>Заказ оформлен</h3>
+      <p id="buy-done-text"></p>
+      <button type="button" class="btn btn-dark dialog-ok">Хорошо</button>
+    </div>
+  </dialog>
+
+  <!-- Предложить цену -->
+  <dialog class="dialog" data-lenis-prevent id="offer-dialog">
+    <button type="button" class="dialog-close" title="Закрыть">×</button>
+    <form class="dialog-form">
+      <span class="label">Торг уместен</span>
+      <h3>Предложить цену</h3>
+      <div class="dialog-item"></div>
+
+      <label>Твоя цена, ₽
+        <input name="offer" type="number" min="1" step="1" required>
+      </label>
+      <!-- Быстрые скидки: заполняют поле цены -->
+      <div class="chips" id="offer-chips">
+        <button type="button" data-discount="5">−5%</button>
+        <button type="button" data-discount="10">−10%</button>
+        <button type="button" data-discount="15">−15%</button>
+      </div>
+      <p class="dialog-hint" id="offer-hint"></p>
+
+      <p class="form-error dialog-error" hidden></p>
+
+      <button type="submit" class="btn btn-dark">Отправить предложение</button>
+      <small class="dialog-note">Продавец ответит в течение 24 часов.</small>
+    </form>
+    <div class="dialog-done" hidden>
+      <span class="label">Отправлено</span>
+      <h3>Предложение у продавца</h3>
+      <p id="offer-done-text"></p>
+      <button type="button" class="btn btn-dark dialog-ok">Хорошо</button>
+    </div>
+  </dialog>
+
+  <!-- Написать продавцу -->
+  <dialog class="dialog" data-lenis-prevent id="message-dialog">
+    <button type="button" class="dialog-close" title="Закрыть">×</button>
+    <form class="dialog-form">
+      <span class="label">Сообщение</span>
+      <h3 id="message-title">Написать продавцу</h3>
+      <div class="dialog-item"></div>
+
+      <!-- Готовые вопросы: клик вставляет текст в поле -->
+      <div class="chips" id="message-chips">
+        <button type="button">Вещь ещё в наличии?</button>
+        <button type="button">Можно больше фото?</button>
+        <button type="button">Пришлите замеры, пожалуйста</button>
+      </div>
+      <label>Текст
+        <textarea name="text" rows="5" maxlength="1000" required></textarea>
+      </label>
+
+      <p class="form-error dialog-error" hidden></p>
+
+      <button type="submit" class="btn btn-dark">Отправить</button>
+    </form>
+    <div class="dialog-done" hidden>
+      <span class="label">Отправлено</span>
+      <h3>Сообщение доставлено</h3>
+      <p id="message-done-text"></p>
+      <button type="button" class="btn btn-dark dialog-ok">Хорошо</button>
+    </div>
+  </dialog>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom label">© 2026 RAREFORM</div>
+    </div>
+  </footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" позволяет написать await прямо в скрипте: ждём товары с сервера -->
+  <script type="module">
+    await productsReady; // из products.js
+
+    // Берём id из адреса страницы: product.html?id=4 → 4
+    const params = new URLSearchParams(window.location.search);
+    const id = Number(params.get("id"));
+
+    // Ищем в списке товар с таким id
+    const product = products.find(p => p.id === id);
+
+    if (product) {
+      // Короткая функция: найти элемент по id и записать в него текст
+      function fill(elementId, text) {
+        document.getElementById(elementId).textContent = text;
+      }
+
+      document.title = `${product.brand} — ${product.title} | RAREFORM`;
+      fill("crumb-category", product.category);
+      fill("crumb-brand", product.brand);
+      fill("emoji", product.emoji);
+      fill("category", product.category);
+      fill("brand", product.brand);
+      fill("title", product.title);
+      fill("price", formatPrice(product.price));
+      fill("size", product.size);
+      fill("condition", product.condition);
+      fill("color", product.color);
+      fill("city", product.city);
+      fill("avatar", product.seller[0].toUpperCase()); // первая буква ника
+      fill("seller", product.seller);
+      // ?? — если рейтинга нет (null), показываем прочерк
+      fill("seller-stats", `★ ${product.rating ?? "—"} · ${product.sales} продаж`);
+      fill("description", product.description);
+
+      // ===== Избранное =====
+      const favButton = document.getElementById("fav-button");
+      function showFavButton(liked) {
+        favButton.textContent = liked ? "♥ В избранном" : "♡ В избранное";
+      }
+      showFavButton(isFavorite(product.id));
+      favButton.onclick = () => showFavButton(toggleFavorite(product.id));
+      // Избранное аккаунта может прийти с сервера чуть позже — тогда обновляем кнопку
+      document.addEventListener("favorites-changed", () => showFavButton(isFavorite(product.id)));
+
+      // ===== Окна: Купить, Предложить цену, Написать продавцу =====
+
+      // Отправляет заказ, предложение или сообщение на сервер.
+      // kind — "orders", "offers" или "messages": адрес /api/products/5/orders и т.д.
+      // Пока ждём ответ, кнопка заблокирована. При ошибке показываем её текст в окне
+      // и выбрасываем исключение — тогда «Готово» не покажется.
+      async function sendToServer(form, kind, data) {
+        const button = form.querySelector('button[type="submit"]');
+        const errorBox = form.querySelector(".dialog-error");
+        errorBox.hidden = true;
+        button.disabled = true;
+        try {
+          const response = await fetch(`/api/products/${product.id}/${kind}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+          const body = await response.json();
+          if (!response.ok) {
+            // detail — строка (наша ошибка) или список (ошибка проверки полей от FastAPI)
+            throw new Error(typeof body.detail === "string" ? body.detail : "Проверь, что всё заполнено верно");
+          }
+          return body;
+        } catch (error) {
+          errorBox.textContent = error.message === "Failed to fetch" ? "Сервер не отвечает. Попробуй позже." : error.message;
+          errorBox.hidden = false;
+          throw error;
+        } finally {
+          button.disabled = false; // finally выполняется в любом случае: и при успехе, и при ошибке
+        }
+      }
+
+      // Мини-карточка товара вверху каждого окна
+      const itemHtml = `
+        ${getPhotos(product)[0] ? `<img src="${escapeHtml(getPhotos(product)[0])}" alt="">` : `<span>${escapeHtml(product.emoji)}</span>`}
+        <div>
+          <strong>${escapeHtml(product.brand)}</strong><br>
+          ${escapeHtml(product.title)}<br>
+          <small>Размер ${escapeHtml(product.size)} · ${formatPrice(product.price)}</small>
+        </div>
+      `;
+      document.querySelectorAll(".dialog-item").forEach(el => el.innerHTML = itemHtml);
+
+      // Показать окну форму или сообщение «Готово»
+      function showDone(dialog, done) {
+        dialog.querySelector(".dialog-form").hidden = done;
+        dialog.querySelector(".dialog-done").hidden = !done;
+      }
+
+      // ===== Кто смотрит страницу =====
+      const user = await userReady; // из ui.js
+
+      // Своё объявление купить нельзя — вместо кнопок покупки ссылка в кабинет
+      if (user && product.user_id === user.id) {
+        document.querySelectorAll("[data-open]").forEach(button => button.hidden = true);
+        document.querySelector(".buttons").insertAdjacentHTML("afterbegin",
+          `<a href="account.html" class="btn btn-dark">Твоё объявление · в кабинет</a>`);
+      }
+
+      // Кнопки с data-open открывают своё окно. Без входа — сначала на страницу входа,
+      // а после входа loginUrl() вернёт человека обратно на этот товар
+      for (const button of document.querySelectorAll("[data-open]")) {
+        button.addEventListener("click", () => {
+          // Демо-версия (GitHub Pages): сервера нет, покупать некуда — объясняем
+          if (staticDemo) {
+            showDemoNotice("Покупки, предложения цены и сообщения продавцу работают в полной версии сайта. Здесь можно посмотреть каталог и добавить вещи в избранное.");
+            return;
+          }
+          if (!user) {
+            location.href = loginUrl();
+            return;
+          }
+          const dialog = document.getElementById(button.dataset.open);
+          showDone(dialog, false);
+          dialog.showModal();
+        });
+      }
+
+      for (const dialog of document.querySelectorAll(".dialog")) {
+        // Крестик и «Хорошо» закрывают окно
+        dialog.querySelectorAll(".dialog-close, .dialog-ok").forEach(b => b.onclick = () => dialog.close());
+        // Клик по тёмному фону вокруг окна тоже закрывает
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) dialog.close();
+        });
+      }
+
+      // --- Купить ---
+      const buyDialog = document.getElementById("buy-dialog");
+      const buyForm = buyDialog.querySelector("form");
+      document.getElementById("pickup-option").textContent = `Самовывоз, ${product.city} — бесплатно`;
+      // Имя подставляем из аккаунта. defaultValue — значение, к которому вернёт form.reset()
+      buyForm.elements.name.defaultValue = user?.name || "";
+
+      // Цены доставки — только чтобы показать итог заранее. Настоящий итог посчитает сервер
+      const DELIVERY_PRICES = { cdek: 500, courier: 900, pickup: 0 };
+
+      // Итог пересчитывается при смене доставки
+      function updateTotal() {
+        const delivery = DELIVERY_PRICES[buyForm.elements.delivery.value];
+        document.getElementById("buy-total").textContent = formatPrice(product.price + delivery);
+      }
+      buyForm.elements.delivery.addEventListener("change", updateTotal);
+      updateTotal();
+
+      buyForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const name = buyForm.elements.name.value.trim();
+        const phone = buyForm.elements.phone.value.trim();
+        // Отправляем только имя, телефон и способ доставки — без цены
+        const result = await sendToServer(buyForm, "orders", {
+          name, phone, delivery: buyForm.elements.delivery.value
+        }).catch(() => null); // ошибку уже показали в окне
+        if (!result) return;
+
+        document.getElementById("buy-done-text").textContent =
+          `${name}, продавец ${product.seller} получил заказ №${result.id} на ${formatPrice(result.total)}. ` +
+          `Мы позвоним на ${phone}, когда вещь пройдёт проверку подлинности.`;
+        buyForm.reset();
+        updateTotal();
+        showDone(buyDialog, true);
+      });
+
+      // --- Предложить цену ---
+      const offerDialog = document.getElementById("offer-dialog");
+      const offerForm = offerDialog.querySelector("form");
+      const offerHint = document.getElementById("offer-hint");
+      offerForm.elements.offer.max = product.price - 1; // предложить можно только меньше цены
+
+      // Подсказка под полем меняется по мере ввода
+      function updateOfferHint() {
+        const offer = Number(offerForm.elements.offer.value);
+        const percent = Math.round((1 - offer / product.price) * 100); // скидка в процентах
+        if (!offer) {
+          offerHint.textContent = `Цена продавца — ${formatPrice(product.price)}`;
+        } else if (offer >= product.price) {
+          offerHint.textContent = "Это не меньше цены продавца — проще сразу купить.";
+        } else if (percent > 30) {
+          offerHint.textContent = `Скидка ${percent}% — продавец вряд ли согласится.`;
+        } else {
+          offerHint.textContent = `Скидка ${percent}% от цены продавца.`;
+        }
+        // Класс warn красит подсказку, если предложение слишком низкое или слишком высокое
+        offerHint.classList.toggle("warn", offer > 0 && (percent > 30 || offer >= product.price));
+      }
+      offerForm.elements.offer.addEventListener("input", updateOfferHint);
+      updateOfferHint();
+
+      document.getElementById("offer-chips").addEventListener("click", (event) => {
+        const chip = event.target.closest("button");
+        if (!chip) return;
+        // Math.round — округляем до целых рублей
+        offerForm.elements.offer.value = Math.round(product.price * (1 - chip.dataset.discount / 100));
+        updateOfferHint();
+      });
+
+      offerForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const offer = Number(offerForm.elements.offer.value);
+        const result = await sendToServer(offerForm, "offers", { amount: offer }).catch(() => null);
+        if (!result) return;
+        document.getElementById("offer-done-text").textContent =
+          `Твоё предложение — ${formatPrice(offer)} за ${product.brand} ${product.title}. ` +
+          `Если ${product.seller} согласится, вещь будет ждать тебя 24 часа.`;
+        offerForm.reset();
+        updateOfferHint();
+        showDone(offerDialog, true);
+      });
+
+      // --- Написать продавцу ---
+      const messageDialog = document.getElementById("message-dialog");
+      const messageForm = messageDialog.querySelector("form");
+      document.getElementById("message-title").textContent = `Написать ${product.seller}`;
+
+      document.getElementById("message-chips").addEventListener("click", (event) => {
+        const chip = event.target.closest("button");
+        if (!chip) return;
+        // Добавляем вопрос к уже написанному тексту, с новой строки
+        const text = messageForm.elements.text.value.trim();
+        messageForm.elements.text.value = text ? `${text}\n${chip.textContent}` : chip.textContent;
+        messageForm.elements.text.focus();
+      });
+
+      messageForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const result = await sendToServer(messageForm, "messages", { text: messageForm.elements.text.value.trim() })
+          .catch(() => null);
+        if (!result) return;
+        document.getElementById("message-done-text").textContent =
+          `${product.seller} обычно отвечает в течение пары часов.`;
+        messageForm.reset();
+        showDone(messageDialog, true);
+      });
+
+      // ===== Фото =====
+      const photos = getPhotos(product);
+      const mainPhoto = document.getElementById("main-photo");
+      const thumbs = document.getElementById("thumbs");
+
+      // Если главного фото нет — прячем его, будет видно эмодзи
+      mainPhoto.onerror = () => mainPhoto.hidden = true;
+      if (photos.length > 0) {
+        mainPhoto.src = photos[0];
+        mainPhoto.alt = `${product.brand} ${product.title}`;
+      } else {
+        mainPhoto.hidden = true;
+      }
+
+      for (const photo of photos) {
+        const thumb = document.createElement("img");
+        thumb.src = photo;
+        thumb.alt = "";
+        // Если такого фото нет — убираем миниатюру
+        thumb.onerror = () => thumb.remove();
+
+        thumb.onclick = () => {
+          if (mainPhoto.src.endsWith(photo)) return; // это фото уже открыто
+          // Плавная смена: старое фото гаснет, подменяем картинку, новое проявляется
+          mainPhoto.classList.add("fading");
+          setTimeout(() => {
+            mainPhoto.src = photo;
+            mainPhoto.classList.remove("fading");
+          }, 250);
+          mainPhoto.hidden = false;
+          // Подсвечиваем выбранную миниатюру
+          thumbs.querySelector(".active")?.classList.remove("active");
+          thumb.classList.add("active");
+        };
+
+        thumbs.appendChild(thumb);
+      }
+      if (thumbs.firstChild) {
+        thumbs.firstChild.classList.add("active");
+      }
+
+      // ===== Похожие вещи =====
+      // Каждому другому товару ставим баллы похожести:
+      // тот же дизайнер — 2 балла, та же категория — 1 балл.
+      // Если похожих мало, места добирают вещи с нулём баллов, близкие по цене.
+      function similarity(other) {
+        let score = 0;
+        if (other.brand === product.brand) score += 2;
+        if (other.category === product.category) score += 1;
+        return score;
+      }
+
+      const similar = products
+        .filter(p => p.id !== product.id) // сам товар не показываем
+        // Сначала самые похожие. При равных баллах — ближе по цене.
+        // Math.abs — модуль числа: разница цен без знака минус
+        .sort((a, b) =>
+          similarity(b) - similarity(a) ||
+          Math.abs(a.price - product.price) - Math.abs(b.price - product.price)
+        )
+        .slice(0, 4); // берём не больше четырёх
+
+      if (similar.length > 0) {
+        const similarGrid = document.getElementById("similar-grid");
+        similarGrid.innerHTML = similar.map(cardHtml).join("");
+        setupLikes(similarGrid);
+        document.getElementById("similar").hidden = false;
+      }
+    } else {
+      // Если id неправильный (например, товар удалили) — показываем сообщение
+      document.querySelector("main").innerHTML = `
+        <div class="section-head section">
+          <span class="label">Ошибка</span>
+          <h2>Товар не найден</h2>
+          <p class="center"><a href="index.html#catalog" class="btn btn-dark">Вернуться в каталог</a></p>
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>

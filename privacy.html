@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Политика конфиденциальности | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero page-hero page-hero-plain">
+    <div class="hero-text">
+      <span class="label hero-line" style="--delay: 0.1s">Документы</span>
+      <h1>
+        <span class="hero-line" style="--delay: 0.25s">Политика</span>
+        <em class="hero-line" style="--delay: 0.4s">конфиденциальности.</em>
+      </h1>
+      <p class="hero-line" style="--delay: 0.55s">Какие данные мы храним, зачем и кто их видит.</p>
+    </div>
+  </section>
+
+  <!-- ЗАМЕНИ перед настоящим запуском: это понятный шаблон для учебного проекта,
+       а не юридический документ. Для работы с реальными покупателями его стоит
+       показать юристу: в России это регулирует закон 152-ФЗ «О персональных данных». -->
+  <main class="info">
+
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Что храним</span>
+        <h2>Какие данные</h2>
+      </div>
+      <ul>
+        <li><strong>Аккаунт:</strong> имя и почта. Пароль мы не храним — только его зашифрованный «отпечаток», из которого пароль не восстановить.</li>
+        <li><strong>Объявления:</strong> описание вещи, фото, цена и город.</li>
+        <li><strong>Заказы:</strong> имя и телефон, которые ты указал при покупке, способ доставки и сумма.</li>
+        <li><strong>Предложения цены и сообщения</strong> продавцам.</li>
+        <li><strong>Избранное</strong> — список вещей, которые ты отметил.</li>
+      </ul>
+    </section>
+
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Зачем</span>
+        <h2>Для чего они нужны</h2>
+      </div>
+      <div>
+        <p>Только чтобы сайт работал: входить в аккаунт, публиковать объявления, передавать заказы и сообщения продавцу.</p>
+        <p>Мы <strong>не продаём и не передаём</strong> данные рекламным сервисам и не присылаем рассылок.</p>
+      </div>
+    </section>
+
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Доступ</span>
+        <h2>Кто их видит</h2>
+      </div>
+      <ul>
+        <li><strong>Все посетители</strong> — объявления и имя продавца.</li>
+        <li><strong>Продавец</strong> — имя и телефон из твоего заказа на его вещь, твои предложения цены и сообщения ему.</li>
+        <li><strong>Администратор сайта</strong> — все данные, чтобы помогать с заказами и блокировать нарушителей.</li>
+      </ul>
+    </section>
+
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Cookie</span>
+        <h2>Что хранится в браузере</h2>
+      </div>
+      <div>
+        <p>Одна cookie <strong>session</strong> — чтобы сайт помнил, что ты вошёл. Она живёт 30 дней или до выхода из аккаунта.</p>
+        <p>Если ты не вошёл, избранное хранится в самом браузере. Счётчиков и рекламных cookie на сайте нет.</p>
+      </div>
+    </section>
+
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Твои права</span>
+        <h2>Удаление данных</h2>
+      </div>
+      <div>
+        <p>Ты можешь снять свои объявления в личном кабинете. Чтобы удалить аккаунт и все связанные данные, напиши нам — контакты на странице <a href="about.html#contacts" class="text-link">«О нас»</a>.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+
+</body>
+</html>

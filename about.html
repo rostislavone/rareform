@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>О нас | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero page-hero">
+    <img src="images/about-supreme.jpg" alt="Баннер Supreme над статуей Свободы" class="hero-bg">
+    <div class="hero-text">
+      <span class="label hero-line" style="--delay: 0.1s">О нас</span>
+      <h1>
+        <span class="hero-line" style="--delay: 0.25s">Вещи, которые</span>
+        <em class="hero-line" style="--delay: 0.4s">стоит сохранить.</em>
+      </h1>
+      <p class="hero-line" style="--delay: 0.55s">RAREFORM — маркетплейс архивной и дизайнерской одежды. Мы соединяем тех, кто бережёт редкие вещи, с теми, кто давно их ищет.</p>
+    </div>
+  </section>
+
+  <main class="info">
+
+    <section class="info-row reveal">
+      <div>
+        <span class="label">История</span>
+        <h2>Почему мы это делаем</h2>
+      </div>
+      <div>
+        <p>Лучшие коллекции живут недолго: сезон заканчивается, вещи исчезают из магазинов и оседают в шкафах. Мы хотим, чтобы куртка Rick Owens, свитер Comme des Garçons или ботинки Guidi продолжали носиться, а не пылились.</p>
+        <p>Поэтому RAREFORM — не просто доска объявлений. Мы <strong>проверяем каждую вещь</strong>, храним деньги покупателя до получения и помогаем продавцу с фото и описанием.</p>
+      </div>
+    </section>
+
+    <section class="info-row reveal">
+      <div>
+        <span class="label">Принципы</span>
+        <h2>Во что мы верим</h2>
+      </div>
+      <ul>
+        <li><strong>Только оригиналы.</strong> Подделка не попадёт к покупателю — её остановит проверка.</li>
+        <li><strong>Честные цены.</strong> Продавец сам решает, сколько стоит вещь. Покупатель может предложить свою цену.</li>
+        <li><strong>Осознанное потребление.</strong> Лучшая вещь — та, что уже сделана и прослужит ещё долго.</li>
+      </ul>
+    </section>
+
+    <section class="info-row reveal">
+      <div class="stats" style="grid-column: 1 / -1">
+        <div class="stat"><strong>2026</strong><span>Год основания</span></div>
+        <div class="stat"><strong>9</strong><span>Дизайнеров в каталоге</span></div>
+        <div class="stat"><strong>0 ₽</strong><span>За размещение</span></div>
+      </div>
+    </section>
+
+    <!-- id="contacts" — на этот блок ведёт ссылка «Контакты» в подвале (about.html#contacts) -->
+    <section class="info-row reveal contacts" id="contacts">
+      <div>
+        <span class="label">Связаться</span>
+        <h2>Контакты</h2>
+      </div>
+      <div>
+        <ul>
+          <!-- mailto: — открывает почтовую программу с уже вписанным адресом -->
+          <li>Почта — <a href="mailto:fckingblazer@gmail.com">fckingblazer@gmail.com</a></li>
+          <!-- t.me/ник — открывает личный чат в Telegram -->
+          <li>Telegram — <a href="https://t.me/rostislavone1" target="_blank" rel="noopener">@rostislavone1</a></li>
+          <li>Поддержка отвечает ежедневно с 10:00 до 22:00 по Москве</li>
+        </ul>
+        <a href="https://t.me/rostislavone1" target="_blank" rel="noopener" class="btn btn-dark" style="margin-top: 32px">Написать в Telegram</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+
+</body>
+</html>

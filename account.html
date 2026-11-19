@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section container account-page">
+
+    <!-- Приветствие. Текст заполняет скрипт -->
+    <div class="account-head reveal">
+      <span class="label">Личный кабинет</span>
+      <h2 id="greeting"></h2>
+      <p id="account-email"></p>
+      <div class="account-actions">
+        <a href="sell.html" class="btn btn-dark">Выставить вещь</a>
+        <!-- Видно только администратору -->
+        <a href="admin.html" class="btn btn-light" id="admin-link" hidden>Панель администратора</a>
+        <button type="button" class="btn btn-light" id="logout">Выйти</button>
+      </div>
+    </div>
+
+    <section class="account-section">
+      <div class="section-head">
+        <span class="label">Продажи</span>
+        <h2>Мои объявления</h2>
+      </div>
+      <div class="grid" id="my-grid"></div>
+      <p class="empty" id="my-empty" hidden>Ты ещё ничего не выставил. <a href="sell.html">Продать вещь</a></p>
+    </section>
+
+    <section class="account-section">
+      <div class="section-head">
+        <span class="label">Покупки</span>
+        <h2>Мои заказы</h2>
+      </div>
+      <ul class="purchases" id="purchases"></ul>
+      <p class="empty" id="purchases-empty" hidden>Заказов пока нет. <a href="index.html#catalog">В каталог</a></p>
+    </section>
+
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" — чтобы можно было написать await прямо в скрипте -->
+  <script type="module">
+    const user = await userReady; // из ui.js
+
+    if (!user) {
+      // Не вошёл — отправляем на вход, а после входа вернём сюда
+      location.replace(loginUrl());
+    } else {
+      await showAccount();
+    }
+
+    async function showAccount() {
+      document.getElementById("greeting").textContent = `Привет, ${user.name}`;
+      document.getElementById("account-email").textContent = user.email + (user.is_admin ? " · администратор" : "");
+
+      document.getElementById("logout").addEventListener("click", async () => {
+        await fetch("/api/logout", { method: "POST" }).catch(() => null);
+        location.href = "index.html";
+      });
+
+      // Мои объявления и мои заказы загружаем одновременно: Promise.all ждёт оба запроса
+      const [myProducts, myOrders] = await Promise.all([
+        fetch("/api/me/products").then(r => r.json()),
+        fetch("/api/me/orders").then(r => r.json())
+      ]);
+
+      // renderManagedListings из ui.js — карточки со входящими и кнопкой «Снять с продажи»
+      renderManagedListings(document.getElementById("my-grid"), myProducts);
+      document.getElementById("my-empty").hidden = myProducts.length > 0;
+      renderPurchases(myOrders);
+
+      // Администратору — кнопка в панель
+      document.getElementById("admin-link").hidden = !user.is_admin;
+    }
+
+    // ===== Мои заказы =====
+    function renderPurchases(orders) {
+      document.getElementById("purchases-empty").hidden = orders.length > 0;
+      document.getElementById("purchases").innerHTML = orders.map(o => {
+        const photo = getPhotos(o)[0];
+        return `
+          <li class="purchase reveal">
+            <a href="product.html?id=${Number(o.product_id)}" class="purchase-photo">
+              ${photo ? `<img src="${escapeHtml(photo)}" alt="">` : ""}
+            </a>
+            <div>
+              <strong>${escapeHtml(o.brand)}</strong>
+              <span>${escapeHtml(o.title)}</span>
+              <small>Заказ №${Number(o.id)} · ${escapeHtml(o.delivery)} · ${formatDate(o.created_at)}</small>
+            </div>
+            <span class="purchase-total">${formatPrice(o.total)}</span>
+          </li>
+        `;
+      }).join("");
+    }
+  </script>
+
+</body>
+</html>

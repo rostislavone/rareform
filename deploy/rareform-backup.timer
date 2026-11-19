@@ -1,0 +1,11 @@
+# Таймер — «будильник» systemd: каждую ночь в 04:00 запускает rareform-backup.service.
+# Persistent=true — если сервер был выключен в 04:00, копия сделается сразу после включения.
+[Unit]
+Description=RAREFORM — резервная копия каждую ночь
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

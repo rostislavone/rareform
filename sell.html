@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Продать вещь | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html" class="current">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container sell-page">
+    <div class="section-head section">
+      <span class="label">Для продавцов</span>
+      <h2>Новое объявление</h2>
+    </div>
+
+    <!-- Для тех, кто не вошёл: вместо формы — приглашение войти -->
+    <div class="login-gate" id="login-gate" hidden>
+      <p>Чтобы выставить вещь, войди в аккаунт. Так покупатели будут знать, кто продавец, а ты увидишь их заказы и сообщения в личном кабинете.</p>
+      <a href="login.html" class="btn btn-dark" id="gate-link">Войти или зарегистрироваться</a>
+    </div>
+
+    <!-- novalidate не ставим: браузер сам проверит поля с required и не даст отправить пустую форму.
+         hidden — форму покажем, когда узнаем, что человек вошёл -->
+    <form class="sell-form" id="sell-form" hidden>
+
+      <!-- ===== Фото ===== -->
+      <fieldset class="reveal">
+        <legend class="label">Фото</legend>
+        <!-- label обёрнут вокруг input: клик по рамке открывает выбор файлов -->
+        <label class="photo-drop">
+          <input type="file" id="photo-input" accept="image/*" multiple>
+          <span>Добавить фото</span>
+          <small>До 5 штук. Первое фото станет главным.</small>
+        </label>
+        <!-- Сюда JavaScript добавит превью выбранных фото -->
+        <div class="photo-preview" id="photo-preview"></div>
+      </fieldset>
+
+      <!-- ===== Вещь ===== -->
+      <fieldset class="reveal">
+        <legend class="label">Вещь</legend>
+        <div class="form-grid">
+          <label>Бренд
+            <input name="brand" type="text" placeholder="Rick Owens" required>
+          </label>
+          <label>Название
+            <input name="title" type="text" placeholder="Кожаная куртка Stooges" required>
+          </label>
+          <label>Категория
+            <!-- Значения такие же, как в фильтре каталога -->
+            <select name="category" required>
+              <option value="">Выбери категорию</option>
+              <option>Верх</option>
+              <option>Низ</option>
+              <option>Верхняя одежда</option>
+              <option>Обувь</option>
+              <option>Аксессуары</option>
+            </select>
+          </label>
+          <label>Размер
+            <input name="size" type="text" placeholder="M, 42, OS" required>
+          </label>
+          <label>Состояние
+            <select name="condition" required>
+              <option>Новое с бирками</option>
+              <option>Новое</option>
+              <option selected>Отличное</option>
+              <option>Хорошее</option>
+              <option>Удовлетворительное</option>
+            </select>
+          </label>
+          <label>Цвет
+            <input name="color" type="text" placeholder="Чёрный">
+          </label>
+        </div>
+        <label>Описание
+          <textarea name="description" rows="5" placeholder="Расскажи о вещи: сезон, материал, дефекты, что есть в комплекте" required></textarea>
+        </label>
+      </fieldset>
+
+      <!-- ===== Цена и город. Продавец — твой аккаунт, его имя сервер подставит сам ===== -->
+      <fieldset class="reveal">
+        <legend class="label">Цена и город</legend>
+        <div class="form-grid">
+          <label>Цена, ₽
+            <input name="price" type="number" min="100" step="1" placeholder="25000" required>
+          </label>
+          <label>Город
+            <input name="city" type="text" placeholder="Москва" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <p class="form-error" id="form-error" hidden></p>
+      <button type="submit" class="btn btn-dark">Опубликовать</button>
+      <p class="sell-hint">Твои объявления, заказы и сообщения — в <a href="account.html">личном кабинете</a>.</p>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom label">© 2026 RAREFORM</div>
+    </div>
+  </footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" позволяет написать await прямо в скрипте: ждём товары с сервера -->
+  <script type="module">
+    // Выставлять вещи можно только после входа: показываем форму или приглашение войти
+    const user = await userReady; // из ui.js
+    document.getElementById("sell-form").hidden = !user;
+    document.getElementById("login-gate").hidden = !!user;
+    document.getElementById("gate-link").href = loginUrl(); // после входа вернёмся сюда
+
+    // Демо-версия (GitHub Pages): выставлять вещи некуда — вместо кнопки входа объяснение
+    if (staticDemo) {
+      document.querySelector("#login-gate p").textContent =
+        "Это демо-версия сайта: здесь можно посмотреть каталог, а выставлять вещи можно в полной версии.";
+      document.getElementById("gate-link").href = "index.html#catalog";
+      document.getElementById("gate-link").textContent = "Смотреть каталог";
+    }
+
+    const form = document.getElementById("sell-form");
+    const photoInput = document.getElementById("photo-input");
+    const photoPreview = document.getElementById("photo-preview");
+    const formError = document.getElementById("form-error");
+
+    const MAX_PHOTOS = 5;
+    let photos = []; // выбранные фото в виде строк "data:image/jpeg;base64,..."
+
+    // ===== Фото =====
+    // Фото с телефона весят по 3–5 МБ. Отправлять их на сервер целиком долго,
+    // поэтому уменьшаем каждое до 1000 пикселей по длинной стороне
+    // и сохраняем в JPEG — получается примерно 100–150 КБ.
+    function shrinkPhoto(file) {
+      // Promise — «обещание» вернуть результат позже, когда картинка загрузится
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, 1000 / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          URL.revokeObjectURL(img.src); // освобождаем память
+          resolve(canvas.toDataURL("image/jpeg", 0.8));
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    // Рисует превью выбранных фото с крестиком для удаления
+    function renderPreview() {
+      photoPreview.innerHTML = "";
+      photos.forEach((photo, index) => {
+        const item = document.createElement("div");
+        item.className = "photo-item";
+        item.innerHTML = `<img src="${photo}" alt=""><button type="button" title="Убрать">×</button>`;
+        item.querySelector("button").onclick = () => {
+          photos.splice(index, 1); // убираем одно фото из массива
+          renderPreview();
+        };
+        photoPreview.appendChild(item);
+      });
+    }
+
+    // async/await — способ дождаться Promise без вложенных функций
+    photoInput.addEventListener("change", async () => {
+      for (const file of photoInput.files) {
+        if (photos.length >= MAX_PHOTOS) break;
+        try {
+          photos.push(await shrinkPhoto(file));
+        } catch {
+          showError(`Не получилось открыть файл ${file.name}`);
+        }
+      }
+      photoInput.value = ""; // чтобы можно было снова выбрать тот же файл
+      renderPreview();
+    });
+
+    function showError(text) {
+      formError.textContent = text;
+      formError.hidden = false;
+    }
+
+    // Сервер присылает ошибку как { detail: ... }. Для ошибок проверки полей (422)
+    // detail — список, где у каждой ошибки есть loc — путь к полю, например ["body", "price"].
+    const FIELD_NAMES = {
+      brand: "Бренд", title: "Название", price: "Цена", size: "Размер", category: "Категория",
+      condition: "Состояние", color: "Цвет", city: "Город",
+      description: "Описание", photos: "Фото"
+    };
+
+    function errorText(body) {
+      if (typeof body?.detail === "string") return body.detail;
+      if (Array.isArray(body?.detail)) {
+        const fields = body.detail.map(e => FIELD_NAMES[e.loc?.[1]] || e.loc?.[1]).filter(Boolean);
+        return "Проверь поля: " + [...new Set(fields)].join(", ");
+      }
+      return "Что-то пошло не так. Попробуй ещё раз.";
+    }
+
+    // ===== Отправка формы =====
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    // async — внутри можно ждать ответа сервера через await
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault(); // не перезагружаем страницу, отправляем сами
+      formError.hidden = true;
+
+      // FormData собирает все поля формы по их атрибуту name
+      const data = new FormData(form);
+      const listing = {
+        brand: data.get("brand"),
+        title: data.get("title"),
+        price: Number(data.get("price")),
+        size: data.get("size"),
+        category: data.get("category"),
+        condition: data.get("condition"),
+        color: data.get("color"),
+        city: data.get("city"),
+        description: data.get("description"),
+        photos: photos
+      };
+
+      // Пока ждём сервер, кнопку блокируем — чтобы не отправить объявление дважды
+      submitButton.disabled = true;
+      submitButton.textContent = "Публикуем…";
+
+      try {
+        // fetch с method: "POST" — отправляем данные на сервер.
+        // Тело запроса — объявление в формате JSON, заголовок говорит серверу, что это JSON.
+        const response = await fetch("/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(listing)
+        });
+        const body = await response.json();
+        if (!response.ok) throw new Error(errorText(body));
+
+        // Открываем страницу только что созданного товара. Сервер вернул его целиком
+        window.location.href = `product.html?id=${body.id}`;
+      } catch (error) {
+        // Сюда попадаем и при ошибке сервера, и когда сервер вообще не ответил
+        showError(error.message === "Failed to fetch" ? "Сервер не отвечает. Проверь, что он запущен." : error.message);
+        submitButton.disabled = false;
+        submitButton.textContent = "Опубликовать";
+      }
+    });
+  </script>
+
+</body>
+</html>

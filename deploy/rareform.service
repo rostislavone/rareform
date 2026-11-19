@@ -1,0 +1,34 @@
+# Служба systemd — так Linux запускает программы в фоне.
+# Сайт стартует при включении сервера и сам перезапускается, если упал.
+# Файл кладётся в /etc/systemd/system/rareform.service
+
+[Unit]
+Description=RAREFORM — сайт на FastAPI
+After=network.target
+
+[Service]
+# Сайт работает от отдельного пользователя без прав администратора:
+# если в коде найдут дыру, взломщик не получит весь сервер
+User=rareform
+Group=rareform
+WorkingDirectory=/srv/rareform
+# Настройки: RAREFORM_ENV, RAREFORM_ADMIN_EMAILS, RAREFORM_DB
+EnvironmentFile=/etc/rareform.env
+
+# Слушаем только 127.0.0.1 — снаружи напрямую не достучаться, только через Caddy.
+# --proxy-headers: настоящий адрес посетителя и https берём из заголовков, которые ставит Caddy
+ExecStart=/srv/rareform/.venv/bin/python -m uvicorn server:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips 127.0.0.1
+
+Restart=always
+RestartSec=3
+
+# Дополнительная защита: служба не может менять систему,
+# писать разрешено только в папку с базой и в папку загруженных фото
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/srv/rareform/data /srv/rareform/images/uploads
+
+[Install]
+WantedBy=multi-user.target

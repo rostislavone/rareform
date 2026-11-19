@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход | RAREFORM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar label">Каждая вещь проходит проверку подлинности</div>
+
+  <!-- Шапка такая же, как на главной -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#catalog">Купить</a>
+        <a href="sell.html">Продать</a>
+        <a href="designers.html">Дизайнеры</a>
+      </nav>
+      <a href="index.html" class="logo">RAREFORM</a>
+      <div class="actions">
+        <input class="search" type="text" placeholder="Поиск по брендам и вещам">
+        <a href="favorites.html" class="fav-link" title="Избранное">♡<span class="fav-count"></span></a>
+        <a href="login.html">Войти</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth">
+    <div class="section-head reveal">
+      <span class="label">Аккаунт</span>
+      <h2 id="auth-title">Вход</h2>
+    </div>
+
+    <!-- Переключатель: одна форма, у регистрации появляется поле «Имя» -->
+    <div class="auth-tabs reveal">
+      <button type="button" class="active" data-mode="login">Вход</button>
+      <button type="button" data-mode="register">Регистрация</button>
+    </div>
+
+    <form id="auth-form" class="reveal">
+      <label id="name-field" hidden>Имя
+        <input name="name" type="text" autocomplete="name">
+      </label>
+      <label>Почта
+        <input name="email" type="email" autocomplete="email" required>
+      </label>
+      <label>Пароль
+        <input name="password" type="password" minlength="8" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="btn btn-dark" id="auth-submit">Войти</button>
+      <p class="auth-legal">Регистрируясь, ты соглашаешься с <a href="privacy.html" class="text-link">политикой конфиденциальности</a>.</p>
+    </form>
+
+    <!-- Ошибка от сервера: «Неверная почта или пароль» и т.п. -->
+    <p class="auth-note" id="auth-note" hidden></p>
+  </main>
+
+  <!-- Содержимое подвала добавляет ui.js -->
+  <footer class="footer"></footer>
+
+  <script src="products.js"></script>
+  <!-- Lenis — маленькая библиотека плавной прокрутки с инерцией -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="ui.js"></script>
+  <!-- type="module" — чтобы можно было написать await прямо в скрипте -->
+  <script type="module">
+    // ===== Вход и регистрация =====
+    // Форма отправляет почту и пароль на сервер. Сервер проверяет их и кладёт в браузер
+    // cookie сессии — дальше сайт узнаёт человека по ней.
+
+    // Куда вернуться после входа: login.html?next=product.html%3Fid%3D5.
+    // Разрешаем только страницы нашего сайта вида что-то.html — иначе ссылкой
+    // на вход можно было бы увести человека на чужой сайт.
+    const next = new URLSearchParams(location.search).get("next");
+    const goTo = next && /^[a-z]+\.html(\?[^#]*)?(#.*)?$/i.test(next) ? next : "account.html";
+
+    // Уже вошёл — сразу уходим дальше
+    if (await userReady) location.replace(goTo);
+
+    // Демо-версия (GitHub Pages): аккаунтов нет — прячем форму и объясняем
+    if (staticDemo) {
+      document.getElementById("auth-form").hidden = true;
+      // hidden не сработает: в CSS у вкладок display: flex, он сильнее. Прячем напрямую
+      document.querySelector(".auth-tabs").style.display = "none";
+      const demoNote = document.getElementById("auth-note");
+      demoNote.textContent = "Это демо-версия сайта: вход и регистрация работают в полной версии. Каталог и избранное доступны и здесь.";
+      demoNote.hidden = false;
+    }
+
+    const form = document.getElementById("auth-form");
+    const nameField = document.getElementById("name-field");
+    const note = document.getElementById("auth-note");
+    let mode = "login"; // "login" или "register"
+
+    function setMode(newMode) {
+      mode = newMode;
+      const isRegister = mode === "register";
+      document.querySelectorAll(".auth-tabs button").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+      document.getElementById("auth-title").textContent = isRegister ? "Регистрация" : "Вход";
+      document.getElementById("auth-submit").textContent = isRegister ? "Создать аккаунт" : "Войти";
+      nameField.hidden = !isRegister;
+      form.elements.name.required = isRegister; // имя обязательно только при регистрации
+      // Подсказка браузеру: при регистрации предлагать новый пароль, при входе — сохранённый
+      form.elements.password.autocomplete = isRegister ? "new-password" : "current-password";
+      note.hidden = true;
+    }
+
+    document.querySelectorAll(".auth-tabs button").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+
+    const submitButton = document.getElementById("auth-submit");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      note.hidden = true;
+      submitButton.disabled = true;
+
+      const data = { email: form.elements.email.value, password: form.elements.password.value };
+      if (mode === "register") data.name = form.elements.name.value;
+
+      try {
+        const response = await fetch(mode === "register" ? "/api/register" : "/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        if (response.ok) {
+          location.href = goTo; // вошли — cookie уже в браузере
+          return;
+        }
+        const body = await response.json();
+        // 422 — сервер не принял какое-то поле (detail — список ошибок)
+        note.textContent = typeof body.detail === "string" ? body.detail
+          : "Проверь почту, а пароль должен быть не короче 8 символов";
+      } catch {
+        note.textContent = "Сервер не отвечает. Попробуй позже.";
+      }
+      note.hidden = false;
+      form.elements.password.value = ""; // пароль после ошибки стираем
+      submitButton.disabled = false;
+    });
+  </script>
+
+</body>
+</html>
